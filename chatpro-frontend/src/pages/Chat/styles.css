@@ -1,0 +1,44 @@
+#chat {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.messages {
+    width: 600px;
+    height: 400px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.messages:only-of-type {
+    overflow-y: scroll;
+}
+.message {
+    height: max-content;
+    scrollbar-width: inherit;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #ddd;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--cor2);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cor2hover);
+}
