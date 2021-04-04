@@ -1,4 +1,5 @@
 import React, { FormEvent, useState } from 'react';
+import Gravatar from 'react-gravatar';
 import { useSocket } from '../../contexts/SocketContext';
 import ws from '../../modules/SocketConnection.module';
 import './styles.css';
@@ -60,11 +61,18 @@ const Chat: React.FC = () => {
             <form id="chat" onSubmit={handleSubmit}>
                 <main className="messages">
                     {displayMessages.map(display => (
-                        <div className="message" key={display.id}>
+                        <div
+                            className={display.name ? 'message' : 'myMessage'}
+                            key={display.id}
+                        >
+                            <Gravatar
+                                email={String(display.userId)}
+                                className="Gravatar"
+                            />
                             <strong>
-                                {display.name ? display.name : 'Eu'}
+                                {display.name ? display.name : 'Eu'}:
                             </strong>
-                            : {display.message}
+                            {display.message}
                         </div>
                     ))}
                 </main>

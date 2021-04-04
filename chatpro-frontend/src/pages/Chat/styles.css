@@ -7,19 +7,46 @@
 }
 
 .messages {
+    display: flex;
+    flex-direction: column;
     width: 600px;
     height: 400px;
     margin: 20px 0;
     border: 1px solid #ddd;
     padding: 20px;
+    color: var(--cinza4);
 }
 
 .messages:only-of-type {
     overflow-y: scroll;
 }
+
+.Gravatar {
+    height: auto;
+    width: 25px;
+    border-radius: 50%;
+    margin-right: 5px;
+    transform: translateY(+30%);
+}
 .message {
     height: max-content;
     scrollbar-width: inherit;
+    font-weight: 300;
+}
+.message strong {
+    color: var(--cinza5);
+    margin-right: 5px;
+}
+
+.myMessage {
+    color: var(--cor2);
+    justify-content: right;
+    justify-items: right;
+    justify-self: right;
+}
+.myMessage strong {
+    color: var(--cinza5);
+    margin-right: 5px;
 }
 
 /* width */
