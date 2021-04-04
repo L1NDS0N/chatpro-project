@@ -43,7 +43,7 @@ export const SocketProvider: React.FC = ({ children }) => {
             createdAt,
         };
         setNewUser(user);
-        console.log(user);
+        console.log(newUser);
     }, []);
 
     return (
