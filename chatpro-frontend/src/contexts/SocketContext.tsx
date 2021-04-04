@@ -1,35 +1,63 @@
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, {
+    createContext,
+    useState,
+    useEffect,
+    useCallback,
+    useContext,
+    ReactNode,
+} from 'react';
 
-interface UserContextData {
+interface User {
     id?: string;
     name?: string;
-    message?: string;
-    socketObject?: SocketIOClientStatic;
+    socketId?: string;
+    createdAt?: string;
 }
 
-interface SocketProviderProps {
-    children: ReactNode;
+interface UserContextData {
+    saveUser(user: User): void;
+    newUser: User;
 }
 
-export const SocketContext = createContext({} as UserContextData);
+// interface SocketProviderProps {
+//     children: ReactNode;
+// }
 
-export function SocketPrivder({ children }: SocketProviderProps) {
-    const [id, setId] = useState('');
-    const [socketId, setSockedId] = useState('');
-    const [name, setName] = useState('');
+export const SocketContext = createContext<UserContextData>(
+    {} as UserContextData,
+);
+
+// eslint-disable-next-line react/prop-types
+export const SocketProvider: React.FC = ({ children }) => {
+    const [newUser, setNewUser] = useState<User>({});
 
     useEffect(() => {
         Notification.requestPermission();
     }, []);
 
+    const saveUser = useCallback(({ id, name, socketId, createdAt }: User) => {
+        const user = {
+            id,
+            name,
+            socketId,
+            createdAt,
+        };
+        setNewUser(user);
+        console.log(user);
+    }, []);
+
     return (
-        <SocketContext.Provider
-            value={{
-                id,
-                name,
-            }}
-        >
+        <SocketContext.Provider value={{ saveUser, newUser }}>
             {children}
         </SocketContext.Provider>
     );
+};
+
+export function useUser(): UserContextData {
+    const context = useContext(SocketContext);
+
+    if (!context)
+        throw new Error('useUser must be used within an SocketProvider');
+
+    return context;
 }
