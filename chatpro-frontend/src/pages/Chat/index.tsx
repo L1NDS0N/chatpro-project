@@ -46,12 +46,14 @@ const Chat: React.FC = () => {
     }
 
     socket.on('receivedMessage', (response: any) => {
+        const parsedDate = String(new Date(response.created_at));
         setDisplayMessages([
             ...displayMessages,
             {
                 id: response.id,
                 name: response.user_id,
                 message: response.message,
+                createdAt: parsedDate,
             },
         ]);
     });
@@ -62,6 +64,13 @@ const Chat: React.FC = () => {
                 <main className="messages">
                     {displayMessages.map(display => (
                         <div
+                            title={
+                                display.name
+                                    ? `usuário: ${display.name}`
+                                    : `você enviou em ${String(
+                                          new Date(Date.now()),
+                                      )}`
+                            }
                             className={display.name ? 'message' : 'myMessage'}
                             key={display.id}
                         >
@@ -69,10 +78,13 @@ const Chat: React.FC = () => {
                                 email={String(display.userId)}
                                 className="Gravatar"
                             />
-                            <strong>
-                                {display.name ? display.name : 'Eu'}:
-                            </strong>
+                            <strong>{display.name ? display.name : ''}:</strong>
                             {display.message}
+                            <pre>
+                                {display.createdAt
+                                    ? String(display.createdAt)
+                                    : ''}
+                            </pre>
                         </div>
                     ))}
                 </main>

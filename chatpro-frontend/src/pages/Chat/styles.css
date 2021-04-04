@@ -7,6 +7,7 @@
 }
 
 .messages {
+    cursor: default;
     display: flex;
     flex-direction: column;
     width: 600px;
@@ -15,6 +16,7 @@
     border: 1px solid #ddd;
     padding: 20px;
     color: var(--cinza4);
+    overflow-wrap: break-word;
 }
 
 .messages:only-of-type {
@@ -22,29 +24,73 @@
 }
 
 .Gravatar {
+    margin-bottom: 5px;
+    margin-right: 5px;
     height: auto;
     width: 25px;
     border-radius: 50%;
-    margin-right: 5px;
-    transform: translateY(+30%);
+    opacity: 0.8;
+    transition: opacity 0.7s;
 }
+
+.Gravatar:hover {
+    opacity: 1;
+}
+
 .message {
-    height: max-content;
+    /* display: flex; */
+    /* flex-direction: row; */
     scrollbar-width: inherit;
-    font-weight: 300;
+    line-height: 20px;
 }
+
 .message strong {
+    width: max-content;
     color: var(--cinza5);
-    margin-right: 5px;
+    margin: 5px;
+}
+
+.message pre {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    margin-top: -20px;
+    opacity: 0;
+    margin-left: 35px;
+    font-size: 0.8em;
+    transition: opacity 1.5s, margin-top 0.9s;
+    cursor: default;
+}
+
+.message pre:hover {
+    margin-top: -6px;
+    opacity: 0.9;
+}
+
+.message .Gravatar {
+    transform: translateY(40%);
 }
 
 .myMessage {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    break-before: column;
     color: var(--cor2);
-    justify-content: right;
-    justify-items: right;
-    justify-self: right;
+    opacity: 0.85;
+    transition: opacity 0.3s;
 }
+
+.myMessage .Gravatar {
+    transform: translateY(-12%);
+}
+
+.myMessage:hover {
+    opacity: 1;
+}
+
 .myMessage strong {
+    margin-left: 5px;
     color: var(--cinza5);
     margin-right: 5px;
 }
