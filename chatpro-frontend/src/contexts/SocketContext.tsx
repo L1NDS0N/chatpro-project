@@ -1,17 +1,16 @@
 import React, {
     createContext,
-    useState,
-    useEffect,
     useCallback,
     useContext,
-    ReactNode,
+    useEffect,
+    useState,
 } from 'react';
 
 interface User {
-    id?: string;
-    name?: string;
-    socketId?: string;
-    createdAt?: string;
+    id: string;
+    name: string;
+    socketId: string;
+    createdAt: string;
 }
 
 interface UserContextData {
@@ -19,21 +18,20 @@ interface UserContextData {
     newUser: User;
 }
 
-// interface SocketProviderProps {
-//     children: ReactNode;
-// }
-
 export const SocketContext = createContext<UserContextData>(
     {} as UserContextData,
 );
 
-// eslint-disable-next-line react/prop-types
 export const SocketProvider: React.FC = ({ children }) => {
-    const [newUser, setNewUser] = useState<User>({});
+    const [newUser, setNewUser] = useState({} as User);
 
     useEffect(() => {
         Notification.requestPermission();
     }, []);
+
+    function logUser(user: User) {
+        console.log(`This is loguser: `, user);
+    }
 
     const saveUser = useCallback(({ id, name, socketId, createdAt }: User) => {
         const user = {
@@ -43,7 +41,7 @@ export const SocketProvider: React.FC = ({ children }) => {
             createdAt,
         };
         setNewUser(user);
-        console.log(newUser);
+        logUser(user);
     }, []);
 
     return (

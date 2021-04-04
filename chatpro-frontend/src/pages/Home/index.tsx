@@ -1,8 +1,8 @@
-import React, { FormEvent, useContext, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import home from '../../assets/home-ilustracao.png';
 import logo from '../../assets/logo.svg';
-import { SocketContext, useUser } from '../../contexts/SocketContext';
+import { useUser } from '../../contexts/SocketContext';
 import ws from '../../modules/SocketConnection.module';
 import './styles.css';
 
@@ -10,20 +10,20 @@ const Home: React.FC = () => {
     const history = useHistory();
     const [user, setUser] = useState('');
     const { saveUser } = useUser();
+
     async function handleSignin(event: FormEvent) {
         event.preventDefault();
         const socket: SocketIOClient.Socket = ws;
         socket.emit('registrationEvent', user);
         socket.on('registrationEvent', (savedUser: any) => {
+            const sUser = JSON.parse(savedUser);
             saveUser({
-                id: savedUser.id,
-                name: savedUser.name,
-                socketId: savedUser.socket_id,
-                createdAt: savedUser.createad_at,
+                id: sUser.id,
+                name: sUser.name,
+                socketId: sUser.socket_id,
+                createdAt: sUser.created_at,
             });
-            console.log(user);
         });
-
         history.push('/chat');
     }
 
