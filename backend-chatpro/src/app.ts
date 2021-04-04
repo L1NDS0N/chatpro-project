@@ -48,21 +48,20 @@ io.on('connection', (socket: any) => {
     const userData: User = { name: data, socket_id: socket.id };
     await userController.create(userData).then(savedUser => {
       socket.emit('registrationEvent', JSON.stringify(savedUser));
-      console.log(`usuário salvo e enviado para o frontend`);
       console.log(savedUser);
     });
   });
 
-  let messages: User;
-  socket.on('sendMessage', async data => {
-    console.log('mensagem salva e enviada para o frontend');
+  socket.on('sendMessage', (data: any) => {
     const messageData: Message = {
-      user_id: data.user_id,
+      user_id: data.userId,
       message: data.message,
     };
-    socket.broadcast.emit('receivedMessage', messages);
-    await messageController.create(messageData).then(savedMessage => {
-      console.log(savedMessage);
+    messageController.create(messageData).then(savedMessage => {
+      const envio = socket.broadcast.emit('receivedMessage', savedMessage);
+      console.log(envio);
+
+      console.log('mensagem salva e enviada para o frontend', savedMessage);
     });
   });
 });

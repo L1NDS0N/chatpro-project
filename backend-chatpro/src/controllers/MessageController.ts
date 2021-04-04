@@ -11,14 +11,14 @@ class MessageController {
     const messageAlreadyExists = await messagesRepository.findOne({ id });
 
     if (messageAlreadyExists) {
-      throw new AppError('User already exists!');
+      throw new AppError('Message already exists!');
     }
 
     const messageCreated = messagesRepository.create({
       user_id,
       message,
     });
-    console.log(`New user created in database${{}}`);
+    console.log(`New message created in database${{}}`);
     const savedMessage = await messagesRepository.save(messageCreated);
 
     return savedMessage;

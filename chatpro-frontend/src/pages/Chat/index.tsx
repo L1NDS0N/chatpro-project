@@ -1,48 +1,64 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import SocketIoClient from 'socket.io-client';
-import './styles.css';
+import { useSocket } from '../../contexts/SocketContext';
 import ws from '../../modules/SocketConnection.module';
+import './styles.css';
 
-interface User {
+interface Message {
     readonly id?: string;
+    userId?: string;
     name?: string;
-    message?: string;
+    message: string;
+    createdAt?: string;
 }
 
 const Chat: React.FC = () => {
-    const [messageBody, setMessageBody] = useState<User>();
-    const [message, setMessage] = useState('');
-    const [displayMessages, setDisplayMessages] = useState([
-        { name: 'Lindson', message: 'olá!' },
-    ]);
     const socket: SocketIOClient.Socket = ws;
+    const { newUser } = useSocket();
+    const [message, setMessage] = useState<string>();
+    const [displayMessages, setDisplayMessages] = useState<Message[]>([]);
+    const [messageBody, setMessageBody] = useState({
+        userId: newUser.id,
+        message,
+    } as Message);
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
         const element = document.getElementById('inputMessages');
         element?.focus();
-        if (message !== '' && message !== null) {
-            setDisplayMessages([
-                ...displayMessages,
-                { name: 'Lindson', message },
-            ]);
-            setMessageBody({ name: 'Lindson', message });
+
+        if (message !== '' && message !== null && message !== undefined) {
+            setMessageBody({
+                userId: newUser.id,
+                message,
+            });
+
+            console.log({ messageBody });
             socket.emit('sendMessage', messageBody);
+            setMessage('');
         }
-        setMessage('');
     }
 
     socket.on('receivedMessage', (response: any) => {
-        setDisplayMessages([...displayMessages, response]);
-        console.log(response);
+        console.log('mensagem recebida do backend:', response);
+        setDisplayMessages([
+            ...displayMessages,
+            { id: response.id, name: response.id, message: response.message },
+        ]);
     });
 
+    async function handleTyping(e: any) {
+        const { currentTarget } = e;
+        console.log(currentTarget.value);
+        setMessage(currentTarget.value);
+
+        // onChange={e => setMessage(e.currentTarget.value)}
+    }
     return (
         <>
             <form id="chat" onSubmit={handleSubmit}>
                 <main className="messages">
                     {displayMessages.map(display => (
-                        <div className="message">
+                        <div className="message" key={display.id}>
                             <strong>{display.name}</strong>: {display.message}
                         </div>
                     ))}
@@ -51,8 +67,9 @@ const Chat: React.FC = () => {
                     id="inputMessages"
                     type="text"
                     value={message}
-                    onChange={e => setMessage(e.target.value)}
+                    onChange={handleTyping}
                     placeholder="Insira sua mensagem"
+                    required
                 />
                 <button type="submit">Enviar</button>
             </form>
