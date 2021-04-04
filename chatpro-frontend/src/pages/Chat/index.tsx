@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { useSocket } from '../../contexts/SocketContext';
 import ws from '../../modules/SocketConnection.module';
 import './styles.css';
@@ -16,50 +16,55 @@ const Chat: React.FC = () => {
     const { newUser } = useSocket();
     const [message, setMessage] = useState<string>();
     const [displayMessages, setDisplayMessages] = useState<Message[]>([]);
-    const [messageBody, setMessageBody] = useState({
-        userId: newUser.id,
-        message,
-    } as Message);
+    const [messageBody, setMessageBody] = useState({} as Message);
+
+    async function handleTyping(e: any) {
+        const { value } = e.currentTarget;
+        setMessage(value);
+        setMessageBody({ userId: newUser.id, message: value });
+    }
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
         const element = document.getElementById('inputMessages');
         element?.focus();
 
-        if (message !== '' && message !== null && message !== undefined) {
+        if (
+            typeof message === 'string' &&
+            (message != null || undefined || '')
+        ) {
             setMessageBody({
                 userId: newUser.id,
                 message,
             });
 
-            console.log({ messageBody });
+            setDisplayMessages([...displayMessages, messageBody]);
             socket.emit('sendMessage', messageBody);
             setMessage('');
         }
     }
 
     socket.on('receivedMessage', (response: any) => {
-        console.log('mensagem recebida do backend:', response);
         setDisplayMessages([
             ...displayMessages,
-            { id: response.id, name: response.id, message: response.message },
+            {
+                id: response.id,
+                name: response.user_id,
+                message: response.message,
+            },
         ]);
     });
 
-    async function handleTyping(e: any) {
-        const { currentTarget } = e;
-        console.log(currentTarget.value);
-        setMessage(currentTarget.value);
-
-        // onChange={e => setMessage(e.currentTarget.value)}
-    }
     return (
         <>
             <form id="chat" onSubmit={handleSubmit}>
                 <main className="messages">
                     {displayMessages.map(display => (
                         <div className="message" key={display.id}>
-                            <strong>{display.name}</strong>: {display.message}
+                            <strong>
+                                {display.name ? display.name : 'Eu'}
+                            </strong>
+                            : {display.message}
                         </div>
                     ))}
                 </main>
