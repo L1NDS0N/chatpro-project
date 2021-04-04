@@ -51,11 +51,11 @@ export const SocketProvider: React.FC = ({ children }) => {
     );
 };
 
-export function useUser(): UserContextData {
+export function useSocket(): UserContextData {
     const context = useContext(SocketContext);
 
     if (!context)
-        throw new Error('useUser must be used within an SocketProvider');
+        throw new Error('useSocket must be used within an SocketProvider');
 
     return context;
 }

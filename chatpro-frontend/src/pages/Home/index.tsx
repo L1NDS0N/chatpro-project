@@ -2,14 +2,14 @@ import React, { FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import home from '../../assets/home-ilustracao.png';
 import logo from '../../assets/logo.svg';
-import { useUser } from '../../contexts/SocketContext';
+import { useSocket } from '../../contexts/SocketContext';
 import ws from '../../modules/SocketConnection.module';
 import './styles.css';
 
 const Home: React.FC = () => {
     const history = useHistory();
     const [user, setUser] = useState('');
-    const { saveUser } = useUser();
+    const { saveUser } = useSocket();
 
     async function handleSignin(event: FormEvent) {
         event.preventDefault();
