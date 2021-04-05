@@ -75,10 +75,12 @@
     display: flex;
     flex-direction: row-reverse;
     width: 100%;
-    break-before: column;
     color: var(--cor2);
     opacity: 0.85;
     transition: opacity 0.3s;
+    overflow-wrap: break-word;
+    overflow-x: auto;
+    padding-top: 10px;
 }
 
 .myMessage .Gravatar {
@@ -90,9 +92,9 @@
 }
 
 .myMessage strong {
-    margin-left: 5px;
+    opacity: 0;
+    margin-left: 3px;
     color: var(--cinza5);
-    margin-right: 5px;
 }
 
 /* width */
