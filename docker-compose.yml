@@ -1,19 +1,23 @@
-version: "3"
+version: "3.8"
 
 services: 
-  frontend:
-    app:
-    build: .
-    command: npm start
-    ports: 
-      - "3000:3000"
-    volumes:
-      - .:/user/app
-  backend: 
-    app:
-    build: .
-    command: npm start
-    ports: 
-      - "3333:3333"
-    volumes:
-      - .:/user/app
+  l1nds0n-backend: 
+      container_name: backend-l1nds0n
+      restart: always
+      build: ./chatpro-frontend
+      command: yarn dev
+      ports: 
+        - "3333:3333"
+      volumes:
+        - .:/usr/app-backend
+  l1nds0n-frontend:
+      container_name: frontend-l1nds0n
+      restart: always
+      build: ./backend-chatpro
+      command: yarn start
+      ports: 
+        - "3000:3000"
+      volumes:
+        - .:/usr/app-frontend
+      depends_on: 
+        - l1nds0n-backend
