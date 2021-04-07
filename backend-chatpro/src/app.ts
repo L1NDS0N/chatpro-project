@@ -37,8 +37,7 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
 });
 
 io.on('connection', (socket: any) => {
-  console.log(`New user connected: ${socket.id}`);
-  console.log(io.allSockets());
+  console.log('Usuário conectados: ', io.allSockets());
 
   socket.on('disconnect', () => {
     console.log(`User ${socket.id} disconnected`);
@@ -52,15 +51,23 @@ io.on('connection', (socket: any) => {
     });
   });
 
+  socket.on('sendMePreviousMessages', () => {
+    messageController.list().then(previousMessages => {
+      socket.emit('previousMessages', previousMessages);
+      console.warn(
+        'quantidade de mensagens enviadas: ',
+        previousMessages.length,
+      );
+    });
+  });
+
   socket.on('sendMessage', (data: any) => {
     const messageData: Message = {
       user_id: data.userId,
       message: data.message,
     };
     messageController.create(messageData).then(savedMessage => {
-      const envio = socket.broadcast.emit('receivedMessage', savedMessage);
-      console.log(envio);
-
+      socket.broadcast.emit('receivedMessage', savedMessage);
       console.log('mensagem salva e enviada para o frontend', savedMessage);
     });
   });
