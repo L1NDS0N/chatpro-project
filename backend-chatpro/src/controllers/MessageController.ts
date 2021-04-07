@@ -1,4 +1,4 @@
-import { getCustomRepository } from 'typeorm';
+import { FindOperator, getCustomRepository } from 'typeorm';
 import { AppError } from '../errors/AppError';
 import { Message } from '../models/Message';
 import { MessageRepository } from '../repositories/MessageRepository';
@@ -22,6 +22,13 @@ class MessageController {
     const savedMessage = await messagesRepository.save(messageCreated);
 
     return savedMessage;
+  }
+
+  async list() {
+    const messagesRepository = getCustomRepository(MessageRepository);
+
+    const messages = await messagesRepository.find();
+    return messages;
   }
 }
 
